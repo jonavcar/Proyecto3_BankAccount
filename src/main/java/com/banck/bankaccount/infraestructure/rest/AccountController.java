@@ -32,7 +32,7 @@ import org.springframework.http.ResponseEntity;
  * @author jonavcar
  */
 @RestController
-@RequestMapping("/bank-account")
+@RequestMapping("/banck-account")
 @RequiredArgsConstructor
 public class AccountController {
 

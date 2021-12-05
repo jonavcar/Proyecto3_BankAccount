@@ -11,7 +11,6 @@ import io.netty.handler.timeout.WriteTimeoutHandler;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -41,14 +40,14 @@ public class CreditOperationsImpl implements CreditOperations {
                         .addHandlerLast(new WriteTimeoutHandler(3)));
 
         WebClient webClient = WebClient.builder()
-                .baseUrl("")
+                .baseUrl("http://banck-credit.southcentralus.azurecontainer.io:8082")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .clientConnector(new ReactorClientHttpConnector(HttpClient.from(tcpClient))) // timeout
                 .build();
 
         return webClient.get()
-                .uri("/credit/card/" + customer + "/count")
+                .uri("/banck-credit/card/" + customer + "/count")
                 .retrieve()
                 .bodyToMono(Integer.class).flatMap(o -> {
             return Mono.just(o.intValue());
