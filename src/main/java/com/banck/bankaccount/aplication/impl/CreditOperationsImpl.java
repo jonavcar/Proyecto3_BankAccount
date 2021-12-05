@@ -5,8 +5,6 @@
 package com.banck.bankaccount.aplication.impl;
 
 import com.banck.bankaccount.aplication.CreditOperations;
-import com.netflix.appinfo.InstanceInfo;
-import com.netflix.discovery.EurekaClient;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
@@ -31,22 +29,19 @@ import reactor.netty.tcp.TcpClient;
 @RequiredArgsConstructor
 public class CreditOperationsImpl implements CreditOperations {
 
-    @Autowired
-    private EurekaClient discoveryClient;
     Logger logger = LoggerFactory.getLogger(AccountOperationsImpl.class);
 
     @Override
     public Mono<Integer> creditCardsByCustomer(String customer) {
-        InstanceInfo instance = discoveryClient.getNextServerFromEureka("credit-microservice", false);
 
         TcpClient tcpClient = TcpClient.create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000)
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 6000)
                 .doOnConnected(connection
                         -> connection.addHandlerLast(new ReadTimeoutHandler(3))
                         .addHandlerLast(new WriteTimeoutHandler(3)));
 
         WebClient webClient = WebClient.builder()
-                .baseUrl(instance.getHomePageUrl())
+                .baseUrl("")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .clientConnector(new ReactorClientHttpConnector(HttpClient.from(tcpClient))) // timeout
