@@ -1,6 +1,8 @@
 package com.banck.bankaccount.infraestructure.rest;
 
 import com.banck.bankaccount.domain.Account;
+import com.banck.bankaccount.domain.ProductSummaryDto;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,6 +57,11 @@ public class AccountController {
     @GetMapping("/{customer}/list")
     public Flux<Account> listAccountByCustomer(@PathVariable("customer") String customer) {
         return operations.listAccountByCustomer(customer);
+    }
+
+    @GetMapping("/summary/{customer}/list")
+    public Flux<ProductSummaryDto> listProductSummaryByCustomer(@PathVariable("customer") String customer) {
+        return operations.listProductSummaryByCustomer(customer);
     }
 
     @PostMapping

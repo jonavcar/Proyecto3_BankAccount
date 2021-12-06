@@ -1,6 +1,8 @@
 package com.banck.bankaccount.aplication.impl;
 
 import com.banck.bankaccount.domain.Account;
+import com.banck.bankaccount.domain.ProductSummaryDto;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -49,6 +51,18 @@ public class AccountOperationsImpl implements AccountOperations {
     @Override
     public Flux<Account> listAccountByCustomer(String customer) {
         return accountRepository.listAccountByCustomer(customer);
+    }
+
+    @Override
+    public Flux<ProductSummaryDto> listProductSummaryByCustomer(String customer) {
+        return accountRepository.listAccountByCustomer(customer)
+                .map(f -> {
+                    ProductSummaryDto ps = new ProductSummaryDto();
+                    ps.setCustomer(f.getCustomer());
+                    ps.setProduct(f.getAccount());
+                    ps.setDescription(f.getAccountType());
+                    return ps;
+                });
     }
 
 }
